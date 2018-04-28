@@ -42,25 +42,25 @@ def feedForward(inputs):
 	sig = np.vectorize(f)
 	resx = np.multiply(mat2,mat)
 	print("-"*60)
-	print("Multiplicacion de pesos por entrada L1")
+	print("multiply weigths by inputs Layer - 1")
 	print("-"*60)
 	print(resx)
 
 	resx = np.sum(resx,axis=1)
 	print("-"*60)
-	print("Suma del producto L1")
+	print("Sum of product Layer - 1")
 	print("-"*60)
 	print(resx)
 
 	resx+=[random.uniform(-1,1),random.uniform(-1,1)]
 	print("-"*60)
-	print("Suma del bias L1")
+	print("Sum of bias Layer 1")
 	print("-"*60)
 	print(resx)
 
 	resx = sig(resx)
 	print("-"*60)
-	print("Funcion sigmoide L1")
+	print("Apply function sigmoid to Layer 1")
 	print("-"*60)
 	print(resx)
 
