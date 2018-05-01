@@ -20,27 +20,23 @@ class Network():
 
 	def feedForward(self,inp):
 		
-		#res = self.wh * inp[:, 0]
 		i = np.matrix(inp)
-		#res = self.wh * i[:, None]
-		print(i.T)
 
 		x1 = np.array(self.wh)
 		x2 = np.array(inp)
-		print(x1)
-		print(x2)
-		res = (x1*x2)
-		
-		print(res)
-		#res = np.multiply(self.wh*inp)
-		print(res)
-		res = self.ex * inp
+
+		res = (x1*x2.T)
 		res = np.sum(res,axis=1)
-		print(res)
 		res+=[random.uniform(-1,1),random.uniform(-1,1)]
-		print(res)
 		res = self.sigmoid(res)
-		print(res)
+
+		out = np.array(self.wo)*res.T
+		out = np.sum(out[0],axis=0)
+		print(out)
+		out+[random.uniform(-1,1),random.uniform(-1,1)]
+		out = self.sigmoid(out)
+		print(out)
+		return out
 
 	def f(self,x):
 		return 1/(1+exp(-x))

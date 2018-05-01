@@ -19,6 +19,9 @@ n = Network(3,2,1)
 n.feedForward([[1,0],[1,1],[0,1]])
 
 
+
+
+
 def feedForward(inputs):
 	
 	w11 = random.uniform(-1,1)
