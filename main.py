@@ -2,6 +2,7 @@ from Neuron import Neuron
 import random
 import numpy as np
 from math import exp
+from Network import Network
 
 inp = [1,0]
 
@@ -9,15 +10,17 @@ inputs = [[1,0]]
 targets = [1]
 inputsx = [[1,0],[1,1],[0,1],[0,0]]
 
+
 def f(x):
     return 1/(1+exp(-x))
-    # return np.sqrt(x)
 
+
+n = Network(3,2,1)
+n.feedForward([[1,0],[1,1],[0,1]])
 
 
 def feedForward(inputs):
 	
-
 	w11 = random.uniform(-1,1)
 	w12 = random.uniform(-1,1)
 	w21 = random.uniform(-1,1)
@@ -29,8 +32,6 @@ def feedForward(inputs):
 	wih = [[w11,w12],
 		[w21,w22]]
 	
-
-
 	who = [[who1,who2]]
 
 	mat = np.array(inputs)
@@ -80,8 +81,9 @@ def train(inputsT,targets):
 	#print(error)
 
 
-for i in inputs:
-	train(inputs,targets)
+
+#for i in inputs:
+#	train(inputs,targets)
 	#feedForward(inputs)
 #neurons weigths
 
