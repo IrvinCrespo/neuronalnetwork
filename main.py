@@ -16,8 +16,13 @@ def f(x):
 
 
 n = Network(3,2,1)
-n.feedForward([[1,0],[1,1],[0,1]])
+output = n.feedForward([[1,0]])
+error = 1 - output
 
+out = n.dsigmoid(output)
+print(out)
+
+print(error)
 
 
 
