@@ -14,9 +14,13 @@ inputsx = [[1,0],[1,1],[0,1],[0,0]]
 def f(x):
     return 1/(1+exp(-x))
 
+#entradas que coincidan con el parametro de feedforward
+n = Network(4,2,2)
+out = n.feedForward([[1,0]])
+ans = [1]
+print(out)
+print(ans-out)
 
-n = Network(3,2,1)
-n.feedForward([[1,0],[1,1],[0,1]])
 
 
 

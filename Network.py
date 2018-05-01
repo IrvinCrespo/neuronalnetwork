@@ -19,23 +19,32 @@ class Network():
 
 
 	def feedForward(self,inp):
-		
-		i = np.matrix(inp)
 
-		x1 = np.array(self.wh)
-		x2 = np.array(inp)
+		res = np.sum((np.array(self.wh)*np.array(inp).T),axis=self.hidden-1)
 
-		res = (x1*x2.T)
-		res = np.sum(res,axis=1)
-		res+=[random.uniform(-1,1),random.uniform(-1,1)]
+		if len(res)>1:
+			bias1 = []
+			for b1 in res:
+				bias1.append(random.uniform(-1,1))
+			res+bias1
+		else:
+			res+=[random.uniform(-1,1),random.uniform(-1,1)]
+
 		res = self.sigmoid(res)
-
 		out = np.array(self.wo)*res.T
-		out = np.sum(out[0],axis=0)
-		print(out)
-		out+[random.uniform(-1,1),random.uniform(-1,1)]
+
+		if len(out) > 1:
+			out = np.sum(out,axis=self.hidden-self.output)
+			bias = []
+			for b in out:
+				bias.append(random.uniform(-1,1))
+			out+bias
+		else:
+			out = np.sum(out[0],axis=0)
+			out+[random.uniform(-1,1)]
+
+		
 		out = self.sigmoid(out)
-		print(out)
 		return out
 
 	def f(self,x):
