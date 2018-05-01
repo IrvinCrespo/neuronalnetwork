@@ -16,35 +16,62 @@ class Network():
 		self.ex = np.random.uniform(low=-1, high=1, size=(hidden,inputs))
 		self.wh = np.random.uniform(low=-1, high=1, size=(hidden,inputs))
 		self.wo = np.random.uniform(low=-1, high=1, size=(output,hidden))
+		self.bias_h = np.random.uniform(low=-1, high=1, size=(hidden,1))
+		self.bias_o = np.random.uniform(low=-1, high=1, size=(output,1))
+		self.lrate = 0.1
 
+	def feedForward(self,inp,ans):
 
-	def feedForward(self,inp):
+	
+		hidden = self.wh*np.matrix(inp).T
 
-		res = np.sum((np.array(self.wh)*np.array(inp).T),axis=self.hidden-1)
-
-		if len(res)>1:
-			bias1 = []
-			for b1 in res:
-				bias1.append(random.uniform(-1,1))
-			res+bias1
+		if len(hidden)>1:
+			hidden+=self.bias_h
 		else:
-			res+=[random.uniform(-1,1),random.uniform(-1,1)]
+			hidden+=self.bias_h
 
-		res = self.sigmoid(res)
-		out = np.array(self.wo)*res.T
 
-		if len(out) > 1:
-			out = np.sum(out,axis=self.hidden-self.output)
-			bias = []
-			for b in out:
-				bias.append(random.uniform(-1,1))
-			out+bias
-		else:
-			out = np.sum(out[0],axis=0)
-			out+[random.uniform(-1,1)]
+		hidden = self.sigmoid(hidden)
 
-		
+		out = self.wo*hidden
+		out +=self.bias_o
 		out = self.sigmoid(out)
+
+		if out>1:
+			errors = self.subError(ans,out)
+		else:
+			errors = ans-out
+		#continue calculating errors, and gradients
+		
+
+		gradient_o = self.dsigmoid(out)
+		gradient_o = gradient_o*errors
+		hidden_errors = out.T*errors
+
+		if isinstance(gradient_o, list):
+			gradient_o = self.lr(gradient_o,self.lrate)
+		else:
+			gradient_o = gradient_o*self.lrate
+
+		self.bias_o += gradient_o
+		
+		#calculate deltas, adding deltas to HO weights
+	
+		who_deltas = gradient_o*hidden.T
+		self.wo += who_deltas
+		
+
+		#calculate hidden errors
+		hg = self.dsigmoid(hidden)
+		#print(hg)
+		#print(hidden_errors)
+		hg = hg*hidden_errors
+		hg = hg*np.matrix(self.lrate).T#self.lr(hg,self.lrate)
+
+	
+		self.bias_h += hg
+		wih_deltas = np.matrix(inp)*hg
+		self.wh += wih_deltas
 		return out
 
 	def f(self,x):
@@ -54,5 +81,40 @@ class Network():
 		sig = np.vectorize(self.f)
 		return sig(mat)
 
+	def gradient(self,x):
+		return x*(1-x)
+
+	def dsigmoid(self,x):
+		gra = np.vectorize(self.gradient)
+		return gra(x)
+
+	def multi(self,x,n):
+		return x*n
+
+	def multiplyEach(self,x,n):
+		mu = np.vectorize(self.multi)
+		return multi(x,n)
+
+	def lr(self,a,rate):
+		out = []
+		for x in a:
+			out.append(x*rate)
+		return out
+
+	def subError(self,a,b):
+		error = []
+		for x,y in zip(a,b):
+			error.append(x-y)
+		return error
+
+
+
+
+
+
+
+
+
+		
 
 
