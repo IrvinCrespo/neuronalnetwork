@@ -24,13 +24,7 @@ class Network():
 
 	
 		hidden = self.wh*np.matrix(inp).T
-
-		if len(hidden)>1:
-			hidden+=self.bias_h
-		else:
-			hidden+=self.bias_h
-
-
+		hidden+=self.bias_h
 		hidden = self.sigmoid(hidden)
 
 		out = self.wo*hidden
@@ -41,12 +35,16 @@ class Network():
 			errors = self.subError(ans,out)
 		else:
 			errors = ans-out
-		#continue calculating errors, and gradients
-		
 
+
+		hidden_errors = self.wo.T*errors
+
+		#calculate gradient
 		gradient_o = self.dsigmoid(out)
+		
 		gradient_o = gradient_o*errors
-		hidden_errors = out.T*errors
+		
+		
 
 		if isinstance(gradient_o, list):
 			gradient_o = self.lr(gradient_o,self.lrate)
@@ -54,7 +52,7 @@ class Network():
 			gradient_o = gradient_o*self.lrate
 
 		self.bias_o += gradient_o
-		
+
 		#calculate deltas, adding deltas to HO weights
 	
 		who_deltas = gradient_o*hidden.T
@@ -65,13 +63,15 @@ class Network():
 		hg = self.dsigmoid(hidden)
 		#print(hg)
 		#print(hidden_errors)
-		hg = hg*hidden_errors
-		hg = hg*np.matrix(self.lrate).T#self.lr(hg,self.lrate)
+		hg = hg*hidden_errors.T
+		
+		hg = self.lrate*hg.T#np.matrix(self.lrate).T#self.lr(hg,self.lrate)
 
 	
-		self.bias_h += hg
+		self.bias_h + hg
 		wih_deltas = np.matrix(inp)*hg
 		self.wh += wih_deltas
+		#print(out)
 		return out
 
 	def f(self,x):
